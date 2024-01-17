@@ -27,4 +27,9 @@ spec:
       memory: 128Mi
   ingresses:
     - https://frontend-golden-path-api.intern.dev.nav.no
+  accessPolicy:
+    inbound:
+      rules:
+        - application: frontend-golden-path
+
 
