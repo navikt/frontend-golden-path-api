@@ -9,11 +9,11 @@ spec:
   image: {{ image }}
   port: 3000
   liveness:
-    path: "/api/isAlive"
+    path: "/isAlive"
     initialDelay: 20
     timeout: 60
   readiness:
-    path: "/api/isAlive"
+    path: "/isAlive"
     initialDelay: 20
     timeout: 60
   replicas:
