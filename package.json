@@ -10,5 +10,9 @@
   },
   "scripts": {
     "build": ""
+  },
+  "dependencies": {
+    "@navikt/next-auth-wonderwall": "1.5.0",
+    "elysia": "^0.8.9"
   }
 }
