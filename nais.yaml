@@ -35,5 +35,7 @@ spec:
         - application: frontend-golden-path
   idporten:
     enabled: true
+    sidecar:
+      enabled: true
 
 
