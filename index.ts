@@ -10,7 +10,7 @@ const server = Bun.serve({
       return new Response("Authorization header missing", { status: 403 });
     }
     // TODO: validate token x.
-    return new Response("Bun og greier og sånn!");
+    return new Response("Dette er en respons fra API-et 👋 🤖");
   },
 });
 
