@@ -33,9 +33,4 @@ spec:
     inbound:
       rules:
         - application: frontend-golden-path
-  idporten:
-    enabled: true
-    sidecar:
-      enabled: true
-
 
