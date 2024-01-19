@@ -10,6 +10,8 @@ export type ValidationError<ErrorTypes extends string> = {
 export async function verifyJwt(
     bearerToken: string
 ) {
+    console.log(bearerToken)
+
     const tokenXIssuer = await Issuer.discover(process.env.TOKEN_X_WELL_KNOWN_URL!)
     const remoteJWKSet = createRemoteJWKSet(new URL(<string>tokenXIssuer.metadata.jwks_uri))
     const token = bearerToken.replace('Bearer ', '')
