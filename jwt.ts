@@ -18,7 +18,6 @@ export async function verifyJwt(
         audience: `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_APP_NAME}`
     };
     const token = bearerToken.replace('Bearer ', '')
-    console.log(token);
 
     try {
         return await jwtVerify(token, remoteJWKS, options)
