@@ -11,8 +11,8 @@ export async function verifyJwt(
     bearerToken: string
 ) {
     const tokenXIssuer = await Issuer.discover(process.env.TOKEN_X_WELL_KNOWN_URL!)
-    console.log(`discovered: ${JSON.stringify(tokenXIssuer)}`)
     const remoteJWKSet = createRemoteJWKSet(new URL(<string>tokenXIssuer.jwks_uri))
+    console.log(remoteJWKSet)
     const token = bearerToken.replace('Bearer ', '')
 
     try {
