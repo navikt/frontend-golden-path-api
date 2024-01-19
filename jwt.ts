@@ -10,15 +10,16 @@ export type ValidationError<ErrorTypes extends string> = {
 export async function verifyJwt(
     bearerToken: string
 ) {
-    console.log(bearerToken)
-
     const tokenXIssuer = await Issuer.discover(process.env.TOKEN_X_WELL_KNOWN_URL!)
+    console.log(tokenXIssuer)
     const remoteJWKSet = createRemoteJWKSet(new URL(<string>tokenXIssuer.metadata.jwks_uri))
     const token = bearerToken.replace('Bearer ', '')
 
     try {
         return jwtVerify(token, await remoteJWKSet(), {
             issuer: tokenXIssuer.metadata.issuer,
+            algorithms: ['RS256'],
+            audience: "dev-gcp:frontend-golden-path:frontend-golden-path"  
         })
     } catch (err) {
         if (err instanceof errors.JWTExpired) {
