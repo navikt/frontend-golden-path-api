@@ -11,12 +11,12 @@ export async function verifyJwt(
     bearerToken: string
 ) {
     const tokenXIssuer = await Issuer.discover(process.env.TOKEN_X_WELL_KNOWN_URL!)
-    const remoteJWKSet = createRemoteJWKSet(new URL(<string>tokenXIssuer.jwks_uri))
+    const remoteJWKSet = await createRemoteJWKSet(new URL(<string>tokenXIssuer.jwks_uri))
     console.log(remoteJWKSet)
     const token = bearerToken.replace('Bearer ', '')
 
     try {
-        return jwtVerify(token, await remoteJWKSet(), {
+        return jwtVerify(token, remoteJWKSet, {
             issuer: tokenXIssuer.metadata.issuer,
             algorithms: ['RS256'],
             audience: `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_APP_NAME}`
