@@ -12,7 +12,7 @@ const server = Bun.serve({
       console.log("auth header missing")
       return new Response("Authorization header missing", { status: 403 });
     }
-    const validationResult = await verifyJwt(authHeader)
+    const validationResult = verifyJwt(authHeader)
     if ('errorType' in validationResult) {
         console.log("auth header did not validate", validationResult)
         return new Response("Token is not valid", { status: 403 });

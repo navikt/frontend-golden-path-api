@@ -10,17 +10,18 @@ export type ValidationError<ErrorTypes extends string> = {
 export async function verifyJwt(
     bearerToken: string
 ) {
+
     const tokenXIssuer = await Issuer.discover(process.env.TOKEN_X_WELL_KNOWN_URL!)
-    const remoteJWKSet = await createRemoteJWKSet(new URL(<string>tokenXIssuer.jwks_uri))
-    console.log(remoteJWKSet)
+    const remoteJWKS = await createRemoteJWKSet(new URL(<string>tokenXIssuer.jwks_uri))
+    const options = {
+        issuer: tokenXIssuer.metadata.issuer,
+        audience: `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_APP_NAME}`
+    };
     const token = bearerToken.replace('Bearer ', '')
+    console.log(token);
 
     try {
-        return jwtVerify(token, remoteJWKSet, {
-            issuer: tokenXIssuer.metadata.issuer,
-            algorithms: ['RS256'],
-            audience: `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_APP_NAME}`
-        })
+        return await jwtVerify(token, remoteJWKS, options)
     } catch (err) {
         if (err instanceof errors.JWTExpired) {
             return {
