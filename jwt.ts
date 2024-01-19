@@ -19,7 +19,7 @@ export async function verifyJwt(
         return jwtVerify(token, await remoteJWKSet(), {
             issuer: tokenXIssuer.metadata.issuer,
             algorithms: ['RS256'],
-            audience: "dev-gcp:frontend-golden-path:frontend-golden-path"  
+            audience: "${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_APP_NAME}" 
         })
     } catch (err) {
         if (err instanceof errors.JWTExpired) {
