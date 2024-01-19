@@ -1,6 +1,4 @@
 import { createRemoteJWKSet, errors, jwtVerify } from 'jose'
-import type { JWTVerifyResult, ResolvedKey } from 'jose'
-import type { Client } from 'openid-client'
 import { Issuer } from 'openid-client'
 
 export type ValidationError<ErrorTypes extends string> = {

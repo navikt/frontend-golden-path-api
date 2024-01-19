@@ -18,6 +18,7 @@ COPY --from=install /temp/dev/node_modules node_modules
 COPY --from=install /temp/dev/package.json package.json
 
 COPY index.ts .
+COPY jwt.ts .
 
 USER bun
 EXPOSE 3000/tcp
