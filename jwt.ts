@@ -15,7 +15,7 @@ export async function verifyJwt(
     const remoteJWKS = await createRemoteJWKSet(new URL(<string>tokenXIssuer.jwks_uri))
     const options = {
         issuer: tokenXIssuer.metadata.issuer,
-        audience: `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_APP_NAME}`
+        audience: `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_NAMESPACE}:${process.env.NAIS_APP_NAME}`
     };
     const token = bearerToken.replace('Bearer ', '')
 
