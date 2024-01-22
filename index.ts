@@ -17,7 +17,7 @@ const server = Bun.serve({
         console.log("auth header did not validate", validationResult)
         return new Response(`Token is not valid: `, { status: 403 });
     }
-    return new Response("Dette er en respons fra API-et 👋 🤖");
+    return new Response("API says hi 👋 🤖");
   },
 });
 
