@@ -1,6 +1,14 @@
 import { createRemoteJWKSet, errors, jwtVerify } from 'jose'
 import { Issuer } from 'openid-client'
 
+const tokenXIssuer = await Issuer.discover(process.env.TOKEN_X_WELL_KNOWN_URL!)
+const remoteJWKS = await createRemoteJWKSet(new URL(<string>tokenXIssuer.jwks_uri))
+const options = {
+    issuer: tokenXIssuer.metadata.issuer,
+    audience: `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_NAMESPACE}:${process.env.NAIS_APP_NAME}`
+    // TODO validate other claims as needed
+};
+
 export type ValidationError<ErrorTypes extends string> = {
     errorType: ErrorTypes
     message: string
@@ -10,13 +18,6 @@ export type ValidationError<ErrorTypes extends string> = {
 export async function verifyJwt(
     bearerToken: string
 ) {
-
-    const tokenXIssuer = await Issuer.discover(process.env.TOKEN_X_WELL_KNOWN_URL!)
-    const remoteJWKS = await createRemoteJWKSet(new URL(<string>tokenXIssuer.jwks_uri))
-    const options = {
-        issuer: tokenXIssuer.metadata.issuer,
-        audience: `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_NAMESPACE}:${process.env.NAIS_APP_NAME}`
-    };
     const token = bearerToken.replace('Bearer ', '')
 
     try {
@@ -38,6 +39,10 @@ export async function verifyJwt(
             }
         }
 
-        throw err
+        return {
+            errorType: 'OTHER_ERROR',
+            message: 'unknown error occured',
+            error: err,
+        }
     }
 }
