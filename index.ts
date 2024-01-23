@@ -17,8 +17,14 @@ const server = Bun.serve({
         console.log("auth header did not validate", validationResult)
         return new Response(`Token is not valid: `, { status: 403 });
     }
-    return new Response(`API says hi @ ${new Date().toLocaleString()} 👋 🤖`);
+    return new Response(`API says hi @ ${formatter.format(new Date())} 👋 🤖`);
   },
 });
+
+const formatter = Intl.DateTimeFormat('nb-NO', {
+  timeZone: 'Europe/Oslo',
+  dateStyle: 'short',
+  timeStyle: 'long'
+})
 
 console.log(`Listening on http://localhost:${server.port} ...`);
