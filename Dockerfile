@@ -1,25 +1,14 @@
-FROM oven/bun:1 as base
-WORKDIR /usr/src/app
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:26-dev AS install
+USER root
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
 
-FROM base AS install
-ARG NODE_AUTH_TOKEN=$NODE_AUTH_TOKEN
-RUN mkdir -p /temp/dev
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:26 AS release
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=install /app/node_modules node_modules
+COPY package.json index.ts jwt.ts ./
 
-RUN cat <<EOF >/temp/dev/bunfig.toml
-[install.scopes]
-"@navikt" = { token = "$NODE_AUTH_TOKEN", url = "https://npm.pkg.github.com" }
-EOF
-
-COPY package.json bun.lockb /temp/dev/
-RUN cd /temp/dev && bun install --frozen-lockfile
-
-FROM base AS release
-COPY --from=install /temp/dev/node_modules node_modules
-COPY --from=install /temp/dev/package.json package.json
-
-COPY index.ts .
-COPY jwt.ts .
-
-USER bun
-EXPOSE 3000/tcp
-ENTRYPOINT [ "bun", "run", "index.ts" ]
+EXPOSE 3000
+CMD ["index.ts"]

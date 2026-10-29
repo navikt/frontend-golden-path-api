@@ -3,16 +3,20 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/node": "^24"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "scripts": {
-    "build": ""
+    "start": "node index.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "jose": "^5.2.0",
     "openid-client": "^5.6.4"
+  },
+  "engines": {
+    "node": ">=26"
   }
 }

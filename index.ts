@@ -1,30 +1,34 @@
-import { verifyJwt } from "./jwt";
+import { createServer } from "node:http";
+import { verifyJwt } from "./jwt.ts";
 
-const server = Bun.serve({
-  port: 3000,
-  async fetch(req) {
-    if (req.url.endsWith("isAlive")) {
-      return new Response("OK");
-    }
-
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) {
-      console.log("auth header missing")
-      return new Response("Authorization header missing", { status: 403 });
-    }
-    const validationResult = await verifyJwt(authHeader)
-    if ('errorType' in validationResult) {
-        console.log("auth header did not validate", validationResult)
-        return new Response(`Token is not valid: `, { status: 403 });
-    }
-    return new Response(`API says hi @ ${formatter.format(new Date())} 👋 🤖`);
-  },
+const formatter = Intl.DateTimeFormat("nb-NO", {
+  timeZone: "Europe/Oslo",
+  dateStyle: "short",
+  timeStyle: "long",
 });
 
-const formatter = Intl.DateTimeFormat('nb-NO', {
-  timeZone: 'Europe/Oslo',
-  dateStyle: 'short',
-  timeStyle: 'long'
-})
+const server = createServer(async (req, res) => {
+  if (req.url?.endsWith("isAlive")) {
+    res.writeHead(200).end("OK");
+    return;
+  }
 
-console.log(`Listening on http://localhost:${server.port} ...`);
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    console.log("auth header missing");
+    res.writeHead(403).end("Authorization header missing");
+    return;
+  }
+  const validationResult = await verifyJwt(authHeader);
+  if ("errorType" in validationResult) {
+    console.log("auth header did not validate", validationResult);
+    res.writeHead(403).end("Token is not valid: ");
+    return;
+  }
+  res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+  res.end(`API says hi @ ${formatter.format(new Date())} 👋 🤖`);
+});
+
+server.listen(3000, () => {
+  console.log("Listening on http://localhost:3000 ...");
+});

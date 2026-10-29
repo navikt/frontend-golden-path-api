@@ -2,7 +2,7 @@ import { createRemoteJWKSet, errors, jwtVerify } from 'jose'
 import { Issuer } from 'openid-client'
 
 const tokenXIssuer = await Issuer.discover(process.env.TOKEN_X_WELL_KNOWN_URL!)
-const remoteJWKS = await createRemoteJWKSet(new URL(<string>tokenXIssuer.jwks_uri))
+const remoteJWKS = await createRemoteJWKSet(new URL(tokenXIssuer.jwks_uri as string))
 const options = {
     issuer: tokenXIssuer.metadata.issuer,
     audience: `${process.env.NAIS_CLUSTER_NAME}:${process.env.NAIS_NAMESPACE}:${process.env.NAIS_APP_NAME}`

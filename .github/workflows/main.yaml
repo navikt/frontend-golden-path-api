@@ -1,6 +1,8 @@
 name: Build & Deploy
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *"
   push:
     branches:
       - main
@@ -22,8 +24,6 @@ jobs:
           team: frontend-golden-path
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-          build_args:
-            NODE_AUTH_TOKEN=${{ secrets.READER_TOKEN }}
       - name: Deploy
         uses: nais/deploy/actions/deploy@v2 # ratchet:exclude
         env:
